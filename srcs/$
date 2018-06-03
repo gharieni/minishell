@@ -1,0 +1,49 @@
+#include <minishell.h>
+void		*my_find_elm_eq_in_list(t_list *begin, void *data_ref,
+int (*cmp)())
+{
+  while (begin && cmp(begin->content, data_ref))
+    {
+      begin = begin->next;
+    }
+  if (begin)
+    return (true);
+  else
+    return (0);
+}
+
+t_list* list_check_add(void* data, t_list* list)
+{
+	t_list* l;
+if(my_find_elm_eq_in_list(list,data,(*cmp)))
+
+	l = malloc(sizeof(t_list));
+	l->content = data;
+	l->next = list;
+	return l;
+}
+
+t_list* my_list_add(void* data, t_list* list)
+{
+	t_list* l;
+
+	l = malloc(sizeof(t_list));
+	l->content = data;
+	l->next = list;
+	return l;
+}
+
+t_list *my_params_in_list(int ac, char **av)
+{
+	t_list* l;
+	int i;
+
+	i = 0;
+	l = 0;
+	while(i < ac)
+	{
+		l = my_list_add(av[i], l);
+		i = i + 1;
+	}
+	return (l);
+}

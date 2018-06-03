@@ -1,0 +1,84 @@
+#include "minishell.h"
+
+char *my_env(char **env)
+{
+	int i;
+
+	i = -1;
+	while (env[++i])
+		if(ft_strncmp(env[i],"PATH=",5) == 0)
+			return ((char*)env[i] + 5);
+	return (NULL);
+}
+
+char *add_path(char **bin,char *argv)
+{
+	char *str;
+	int i = -1;
+	char *old_bin;
+	while(bin[++i])
+	{
+		old_bin = bin[i];
+		bin[i] = ft_strjoin(bin[i],"/");
+		free(old_bin);
+		str = ft_strjoin(bin[i],argv);
+		if (access(str,R_OK) == 0)
+			return(str);
+		free(str);
+	}
+
+	return NULL;
+}
+
+void cd_dir(char **newargv)
+{
+	int i = 0;
+	while(newargv[++i])
+		if(newargv[i][0] != '-')
+		{
+			chdir(newargv[i]);
+			return ;
+		}
+}
+
+int my_work(char **env)
+{
+	char **bin;
+	char *path;
+	char **newargv;
+	char *str;
+
+	ft_putstr("gmelek> ");
+path = my_env(env);
+	bin = ft_strsplit(path,':');
+	get_next_line(0,&str);
+		newargv = strsplit(str);
+	free(str);
+	str = add_path(bin,newargv[0]);
+	if(ft_strcmp(newargv[0],"cd") == 0)
+		cd_dir(newargv);
+	else if(ft_strcmp(newargv[0],"exit") == 0)
+		return(1);
+	return execve(str, newargv, env);
+}
+
+int main(int ac , char **av, char **env)
+{
+	int status;
+	int options = 0;
+	struct rusage usage;
+
+	pid_t pid;
+	pid = (pid_t)NULL;
+
+while (42 || ac || av[0])
+	{
+		pid = fork();
+		if (pid == 0)
+			exit(my_work(env) == 1);
+		wait4(pid, &status, options, &usage);
+		if(status == 256)
+			exit(0);
+	}
+	return (0);
+}
