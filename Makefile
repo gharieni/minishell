@@ -22,7 +22,10 @@ INC = includes
 CFLAGS = -g -v -Wall -Werror -Wextra
 SRC_NAME = main.c \
 		   tools.c\
+		   setenv.c\
+		   error.c\
 		   list.c\
+		   cd.c\
 	gnl/get_next_line.c
 
 

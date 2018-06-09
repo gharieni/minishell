@@ -11,24 +11,22 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-t_list		*my_unsetenv(char *var,char *val,t_list *l)
+char **my_exceve(char *str, char **newargv, t_env *list)
 {
-	char *str;
+	char **env;
+	int i = 0;
 
-	var = ft_strjoin(var,"=");
-	str = ft_strjoin(var,val);
-	
-	my_find_list_del(&l, str);
-	return l;
-}
-t_list		*my_setenv(char *var,char *val,t_list *l)
-{
-	char *str;
-
-	var = ft_strjoin(var,"=");
-	str = ft_strjoin(var,val);
-	l = list_check_add(str,l);
-	return l;
+	env = NULL;
+	if(str || newargv || 1)
+		env = (char **)malloc(list_count(list) * sizeof(char*) + 1);
+	while(list)
+	{
+	env[i] = ft_strdup(list->content);
+	i++;
+	list = list->next;
+	}
+	env[i] = NULL;
+return env;
 }
 
 static const char		*ft_str_find_next(const char *str, int skip)
