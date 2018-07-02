@@ -22,15 +22,15 @@ char *my_env(char **env)
 	return (NULL);
 }
 
-t_env		*my_unsetenv(char *var,char *val,t_env *l)
+t_env		*my_unsetenv(char *var,char *val,t_env **l)
 {
 	char *str;
 
 	var = ft_strjoin(var,"=");
 	str = ft_strjoin(var,val);
 
-	my_find_list_del(&l, str);
-	return l;
+	my_find_list_del(l, str);
+	return *l;
 }
 
 int setenv_err(char *var)

@@ -55,17 +55,30 @@ void	my_find_list_del(t_env **list, void *data_ref)
 		free(begin);
 		//begin = tmp;
 	 }
-	print_list(*list);
+}
+
+char *add_var(char *str)
+{
+	char	*new;
+	int		i;
+	
+	i = 0;
+	while(str[i] != '=')
+		i++;
+	new = (char*)malloc(i + 1);
+	new = strncpy(new,str,i);
+	new[i] = '\0';
+	return new;
 }
 
 t_env		*ft_create_elem(void *data)
 {
 	t_env	*list;
 
-	printf("bla9 bla9 >> %s\n",data);
 	list = (t_env*)malloc(sizeof(t_env));
 	if (list)
 	{
+		list->var = add_var(data);
 		list->content = data;
 		list->next = NULL;
 	}
@@ -94,7 +107,6 @@ t_env* list_check_add(void* data, t_env* list)
 		my_list_add(data,&list);
 	return list;
 }
-
 
 
 t_env *my_params_in_list(char **av)

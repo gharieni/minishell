@@ -68,6 +68,18 @@ static char				**ft_tabledel(char **ret, int len)
 	return (NULL);
 }
 
+char *del_tab(char *str)
+{
+	int i;
+
+	i = -1;
+
+	while(str[++i])
+		if(str[i] == '\t')
+			str[i] = ' ';
+		return str;
+}
+
 char					**strsplit(char const *str)
 {
 	char		**ret;

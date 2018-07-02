@@ -4,14 +4,23 @@ void cd_dir(char **newargv,t_env *l)
 {
 	int i = 0;
 	char *pwd;
+	t_env *list;
+	int k;
 
+	k = -1;
+	list = l;
 	if(!newargv[1])
 		newargv[1] = "/Users/user";
 	if(!ft_strcmp(newargv[1], "-"))
-		printf("hooooooooooooooooopa\n");
-		//<< normalement aaprend old pwd
-		//attendre a verifier les variable 
-		//	return ;
+		while (list)
+	{
+		if(!ft_strcmp("OLDPWD",list->var))
+		{
+			while(list->content[++k] != '=');
+			newargv[1] = (list->content + ++k);
+		}
+			list = list->next;
+	}
 	while(newargv[++i])
 		if(newargv[i][0] != '-')
 		{
@@ -27,6 +36,42 @@ void cd_dir(char **newargv,t_env *l)
 		}
 }
 
+int	check_echo(char **argenv, t_env *list)
+{
+	int i;
+	int k;
+	char *str;
+
+	str = argenv[1];
+	k = 0;
+	i = -1;
+	if (str == NULL)
+		return 0;
+
+	if(!ft_strcmp(str,"-n"))
+	{
+	i = 2;
+		while(argenv[i])
+		{	ft_putstr(argenv[i]);
+			i++;
+		if(argenv[i])
+			ft_putchar(' ');
+		}
+		return 1;
+	}
+	if (str[0] == '$')
+	while (list)
+	{
+		if(!ft_strcmp(str + 1,list->var))
+		{
+			while(list->content[++k] != '=');
+			ft_putendl(list->content + ++k);
+			return 1;
+		}
+			list = list->next;
+	}
+	return 0;
+}
 
 void    ft_cd_puterr(char *path, char *message)
 {

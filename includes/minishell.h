@@ -21,6 +21,12 @@ typedef struct		s_env
 
 
 
+void    handler(int sign);
+void    signal_handler(int sign);
+int execution(char *str,char **env, char **newargv,t_env **list);
+void    ft_freestrarr(char **arr);
+int	check_echo(char **str, t_env *list);
+char *del_tab(char *str);
 void print_list(t_env *l);
 char	**my_exceve(char *str, char **newargv, t_env *list);
 int		list_count (const t_env *list);
@@ -33,7 +39,7 @@ void	my_find_list_del(t_env **list, void *data_ref);
 int		modif_env(t_env **list,char *var, void *data_ref);
 char	*my_env(char **env);
 t_env	*my_setenv(char *var,char *val,t_env *l);
-t_env  *my_unsetenv(char *var,char *val,t_env *l);
+t_env  *my_unsetenv(char *var,char *val,t_env **l);
 t_env	*list_check_add(void* data, t_env* list);
 t_env	*my_params_in_list(char **av);
 char	**strsplit(char const *str);

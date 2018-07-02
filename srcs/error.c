@@ -6,7 +6,7 @@ void    ft_comnotfound(char *bin)
         ft_putendl_fd(bin, 2);
 }
 
-int             ft_fileserr(char *path)
+int	ft_fileserr(char *path)
 {
 	struct stat     *info;
 

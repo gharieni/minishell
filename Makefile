@@ -23,6 +23,9 @@ CFLAGS = -g -v -Wall -Werror -Wextra
 SRC_NAME = main.c \
 		   tools.c\
 		   setenv.c\
+		   mem_free.c\
+		   signal.c\
+		   exec_arg.c\
 		   error.c\
 		   list.c\
 		   cd.c\
