@@ -1,12 +1,10 @@
 #include "minishell.h"
 
-
-
 int execution(char *str,char **env, char **newargv,t_env **list)
 {
-	
+	int ret;
+		signal(SIGINT,handler);
 
-//	signal(SIGINT,handler);
 	if(!newargv[0])
 		return 0;
 	if(ft_strcmp(newargv[0],"cd") == 0)
@@ -18,7 +16,8 @@ int execution(char *str,char **env, char **newargv,t_env **list)
 	}
 	else if(ft_strcmp(newargv[0],"exit") == 0)
 	{
-		//ft_freestrarr(env);
+//		ft_strdel(&str);
+		free_list(list);
 		exit (-1);
 	}
 	else if(ft_strcmp(newargv[0],"env") == 0)
@@ -52,13 +51,14 @@ int execution(char *str,char **env, char **newargv,t_env **list)
 		return 0;
 	}
 	else if(*newargv[0] == '.' && newargv[0][1] == '/' && access(str,R_OK))
-		printf("file >>>>>>>>>>>>>>> \n");
+		ft_putstr("file >>>>>>>>>>>>>>> \n");
 	else if(*newargv[0] == '.' && !newargv[0][1])
-		printf("%s: not enough arguments\n",newargv[0]);
+		ft_putstr(".: not enough arguments\n");
 	
 	if (ft_noaccess(str) == 1)
 		return 0;
-	return execve(str, newargv, env);
 
+	ret = execve(str, newargv, env);
+	return ret;
 	return 0;
 }

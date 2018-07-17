@@ -7,10 +7,24 @@ void    ft_freestrarr(char **arr)
         if (!arr)
                 return ;
         i = -1;
-        while (arr[++i])
+	while (arr[++i])
         {
-                free(arr[i]);
-        }
+                free(*(arr + i));
+				arr[i] = NULL;
+		}
         free(arr);
         arr = NULL;
+}
+
+void free_list(t_env **l)
+{
+	t_env* tmp;
+	while(*l != NULL)
+	{
+		tmp = *l;
+		ft_strdel(&tmp->var);
+		ft_strdel(&tmp->content);
+		*l = tmp->next;
+		free(tmp);
+	}
 }

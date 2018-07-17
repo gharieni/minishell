@@ -79,7 +79,7 @@ t_env		*ft_create_elem(void *data)
 	if (list)
 	{
 		list->var = add_var(data);
-		list->content = data;
+		list->content =ft_strdup(data);
 		list->next = NULL;
 	}
 	return (list);

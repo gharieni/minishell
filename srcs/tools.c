@@ -11,14 +11,14 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-char **my_exceve(char *str, char **newargv, t_env *list)
+char **my_exceve(char *str, t_env *list)
 {
 	char **env;
 	int i = 0;
 
 	env = NULL;
-	if(str || newargv || 1)
-		env = (char **)malloc(list_count(list) * sizeof(char*) + 1);
+	if(str || 1)
+		env = malloc((list_count(list) + 1) * sizeof (char*));
 	while(list)
 	{
 	env[i] = ft_strdup(list->content);
@@ -88,7 +88,7 @@ char					**strsplit(char const *str)
 
 	if (str == NULL)
 		return (NULL);
-	ret = (char**)malloc(sizeof(char*) * (ft_str_count_splits(str) + 1));
+	ret = malloc(sizeof(char*) * (ft_str_count_splits(str)));
 	if (ret == NULL)
 		return (NULL);
 	i = 0;

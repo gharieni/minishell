@@ -59,7 +59,7 @@ char					**ft_strsplit(char const *str, char c)
 
 	if (str == NULL)
 		return (NULL);
-	ret = (char**)malloc(sizeof(char*) * (ft_str_count_splits(str, c) + 1));
+	ret = malloc(sizeof(char*) * (ft_str_count_splits(str, c) + 1));
 	if (ret == NULL)
 		return (NULL);
 	i = 0;
