@@ -88,7 +88,7 @@ char					**strsplit(char const *str)
 
 	if (str == NULL)
 		return (NULL);
-	ret = malloc(sizeof(char*) * (ft_str_count_splits(str)));
+	ret = malloc(sizeof(char*) * (ft_str_count_splits(str) + 1));
 	if (ret == NULL)
 		return (NULL);
 	i = 0;

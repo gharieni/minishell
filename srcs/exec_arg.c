@@ -23,12 +23,12 @@ int execution(char *str,char **env, char **newargv,t_env **list)
 	else if(ft_strcmp(newargv[0],"env") == 0)
 	{
 		print_list(*list);
-		return 0;
+			return (0);
 	}
 	else if(ft_strcmp(newargv[0],"echo") == 0)
 	{
-		if (check_echo(newargv,*list))
-			return 0;
+		if (!check_echo(newargv,*list))
+		exit (0);
 	}
 	else if(ft_strcmp(newargv[0],"setenv") == 0)
 	{
@@ -58,7 +58,9 @@ int execution(char *str,char **env, char **newargv,t_env **list)
 	if (ft_noaccess(str) == 1)
 		return 0;
 
+	//printf("¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿ %+d \n",ret);
 	ret = execve(str, newargv, env);
+
 	return ret;
 	return 0;
 }

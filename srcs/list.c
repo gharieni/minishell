@@ -4,8 +4,8 @@ void print_list(t_env *l)
 {
 	while(l)
 	{
-		l = l->next;
 		ft_putendl(l->content);
+		l = l->next;
 	}
 }
 

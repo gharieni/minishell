@@ -12,12 +12,9 @@ void add_path(char **str,char **bin,char *argv)
 		bin[i] = ft_strjoin(bin[i],"/");
 		ft_strdel(&old_bin);
 	ft_strdel(str);
-	printf("ııııııııı   str = %p >>>>> bin = %p\n",*str,bin[i]);
 		*str = ft_strjoin(bin[i],argv);
-	printf("ııııııııı   str = %p >>>>> bin = %p\n",*str,bin[i]);
 		if ((k = access(*str,R_OK)) == 0)
 		{
-printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
 	ft_freestrarr(bin);
 	return;
 		}
@@ -40,12 +37,9 @@ int my_work(char **env,t_env **list,char *str)
 	env = my_exceve(str,*list);
 	path = my_env(env);
 	bin = ft_strsplit(path,':');
+	str = del_tab(str);
 	newargv = strsplit(str);
-//				ft_strdel(&str);
-//	printf("<<<<<<<<<<<<<<<<<  %p \n",str);
 	add_path(&str,bin,newargv[0]);
-	printf("ııııııııı   str = %p >>>>> bin = %p\n",str,bin);
-	//ft_freestrarr(bin);
 	pid = fork();
 //			signal(SIGINT,handler);
 	if(pid == 0)
@@ -56,6 +50,7 @@ int my_work(char **env,t_env **list,char *str)
 	ft_freestrarr(newargv);
 		ft_strdel(&str);
 	ft_freestrarr(env);
+	printf("¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿ %d \n",status);
 	if(status == 65280)
 		exit (-1);
 	return(status);
@@ -75,8 +70,6 @@ int main(int ac , char **av, char **env)
 //		signal(SIGINT,signal_handler);
 		get_next_line(0,&str);
 		ret = my_work(NULL,&list,str);
-			printf("hooooooooooooooooooooolllllllllllllaaaaaaaaaaa  %s \n",str);
-	//	ft_strdel(&str);
 	}
 	return (0);
 }
