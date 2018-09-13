@@ -20,11 +20,11 @@ typedef struct		s_env
 }					t_env;
 
 
-
+int free_without_fork(char **newargv, char *str);
 void	free_list(t_env **l);
 void    handler(int sign);
 void    signal_handler(int sign);
-int execution(char *str,char **env, char **newargv,t_env **list);
+void execution(char *str,char **env, char **newargv,t_env **list);
 void    ft_freestrarr(char **arr);
 int	check_echo(char **str, t_env *list);
 char *del_tab(char *str);

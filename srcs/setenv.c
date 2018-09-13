@@ -25,11 +25,13 @@ char *my_env(char **env)
 t_env		*my_unsetenv(char *var,char *val,t_env **l)
 {
 	char *str;
+	char *tmp;
 
-	var = ft_strjoin(var,"=");
-	str = ft_strjoin(var,val);
-
+	tmp = ft_strjoin(var,"=");
+	str = ft_strjoin(tmp,val);
 	my_find_list_del(l, str);
+	ft_strdel(&tmp);
+	ft_strdel(&str);
 	return *l;
 }
 
@@ -51,12 +53,15 @@ return 0;
 t_env		*my_setenv(char *var,char *val,t_env *l)
 {
 	char *str;
+	char *tmp;
 	if(!setenv_err(var))
 		if (!modif_env(&l,val,var))
 		{
-			var = ft_strjoin(var,"=");
-			str = ft_strjoin(var,val);
+			tmp = ft_strjoin(var,"=");
+			str = ft_strjoin(tmp,val);
 			l = list_check_add(str,l);
+			ft_strdel(&str);
+			ft_strdel(&tmp);
 		}
 	return l;
 }
@@ -64,20 +69,23 @@ t_env		*my_setenv(char *var,char *val,t_env *l)
 int   modif_env(t_env **list,char *var, void *data_ref)
 {
 	char	*str;
+	char	*old;
 	t_env	 *begin;
 	begin = *list;
 	unsigned int i;
 
 	i = 0;
-	while (begin && ft_memcmp(begin->content, data_ref,
-				ft_strlen(data_ref)) != 0)
+	while (begin &&
+			ft_memcmp(begin->content, data_ref, ft_strlen(data_ref)) != 0)
 		begin = begin->next;
 	i = ft_strlen(data_ref);
 	if (begin && ((unsigned char*)begin->content)[i] == '=')
 	{
 		data_ref = ft_strjoin(data_ref,"=");
+		old = data_ref;
 		str = ft_strjoin(data_ref,var);
-		//free((unsigned char*)begin->content);
+		ft_strdel(&old);
+		ft_strdel(&begin->content);
 		begin->content = str;
 		return 1;
 	}

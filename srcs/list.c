@@ -48,12 +48,11 @@ void	my_find_list_del(t_env **list, void *data_ref)
     }
   if (begin)
   {
-	  tmp->next = begin->next;
-		//free(begin->content);
-		//begin->content = NULL;
-		begin = NULL;
+		tmp->next = begin->next;
+		ft_strdel(&begin->content);
+		ft_strdel(&begin->var);
 		free(begin);
-		//begin = tmp;
+		begin = NULL;
 	 }
 }
 

@@ -2,18 +2,20 @@
 
 void    ft_freestrarr(char **arr)
 {
-        int i;
+	int i;
 
-        if (!arr)
-                return ;
-        i = -1;
+	if (!arr)
+		return ;
+	i = -1;
 	while (arr[++i])
-        {
-                free(*(arr + i));
-				arr[i] = NULL;
-		}
-        free(arr);
-        arr = NULL;
+	{
+		if(!arr[i])
+			return ;
+		free(*(arr + i));
+		arr[i] = NULL;
+	}
+	free(arr);
+	arr = NULL;
 }
 
 void free_list(t_env **l)
