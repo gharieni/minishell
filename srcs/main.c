@@ -71,31 +71,19 @@ int my_work(char **env,t_env **list,char *str)
 		
 		return(free_without_fork(newargv,str));
 	}
-//	else if (access(str,R_OK) == -1 && *newargv[0] != '.')
-//	//{
-//ft_putstr(">>>>>>>>>>>>>>>>>>>>");
-//		ft_comnotfound(*newargv);
-//			return(free_without_fork(newargv,str));
-//	}
+	else if (access(str,R_OK) == -1 && *newargv[0] != '.')
+	{
+		ft_comnotfound(*newargv);
+			return(free_without_fork(newargv,str));
+	}
 	else if(*newargv[0] == '.' && newargv[0][1] == '/' && access(str,R_OK))
 		ft_putstr("file >>>>>>>>>>>>>>> \n");
 	else if(*newargv[0] == '.' && !newargv[0][1])
 		ft_putstr(".: not enough arguments\n");
-	
 	if (ft_noaccess(str) == 1)
 			return(free_without_fork(newargv,str));
 
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	env = my_exceve(str,*list);
 	path = my_env(env);
 	bin = ft_strsplit(path,':');
@@ -129,15 +117,12 @@ int main(int ac , char **av, char **env)
 		ft_putstr("•••••••  gmelek> ");
 		//		signal(SIGINT,signal_handler);
 		get_next_line(0,&str);
-		while(1)
-			if(ft_strcmp(str,"exit") == 0)
-			{
-				ft_strdel(&str);
-				free_list(&list);
-				return (0);
-			}
-			else
-				break;
+		while(ft_strcmp(str,"exit") == 0)
+		{
+			ft_strdel(&str);
+			free_list(&list);
+			return (0);
+		}
 		ret = my_work(NULL,&list,str);
 	}
 	return (0);

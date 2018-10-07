@@ -21,12 +21,13 @@ void    ft_freestrarr(char **arr)
 void free_list(t_env **l)
 {
 	t_env* tmp;
-	while(*l != NULL)
+	while(*l)
 	{
 		tmp = *l;
 		ft_strdel(&tmp->var);
 		ft_strdel(&tmp->content);
 		*l = tmp->next;
 		free(tmp);
+		tmp = NULL;
 	}
 }

@@ -8,9 +8,8 @@ int free_without_fork(char **newargv, char *str)
 }
 void execution(char *str,char **env, char **newargv,t_env **list)
 {
-		signal(SIGINT,handler);
+		//signal(SIGINT,handler);
 	if(list || 1)
-ft_putstr("ŒŒŒŒŒŒŒŒŒŒŒŒŒŒŒŒ");
 		execve(str, newargv, env);
 
 }
