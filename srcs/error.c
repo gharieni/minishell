@@ -4,6 +4,7 @@ void    ft_comnotfound(char *bin)
 {
         ft_putstr_fd("minishell: command not found: ", 2);
         ft_putendl_fd(bin, 2);
+	//	exit (0);
 }
 
 int	ft_fileserr(char *path)

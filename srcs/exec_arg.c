@@ -11,5 +11,5 @@ void execution(char *str,char **env, char **newargv,t_env **list)
 		//signal(SIGINT,handler);
 	if(list || 1)
 		execve(str, newargv, env);
-
 }
+
