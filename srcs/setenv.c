@@ -27,6 +27,8 @@ t_env		*my_unsetenv(char *var,char *val,t_env **l)
 	char *str;
 	char *tmp;
 
+	if(!var)
+		return *l;
 	tmp = ft_strjoin(var,"=");
 	str = ft_strjoin(tmp,val);
 	my_find_list_del(l, str);

@@ -15,22 +15,27 @@ void cd_dir(char **newargv,t_env *l)
 		newargv[2] = NULL;
 	}
 	if(!ft_strcmp(newargv[1], "-"))
+	{
 		while (list)
 		{
 			if(!ft_strcmp("OLDPWD",list->var))
 			{
 				while(list->content[++k] != '=')
 				{
-				newargv[1] = ft_strdup(list->content + ++k);
-				newargv[2] = NULL;
+					ft_strdel(&newargv[1]);
+					newargv[1] = ft_strdup(list->content + 2 + ++k);
+					newargv[2] = NULL;
 				}
+				break;
 			}
 			list = list->next;
 		}
+	}
 	while(newargv[++i] && (newargv[i][0] != '-'))
 	{
 		if (ft_cd_checkerrors(newargv[i]))
 			return ;
+		//	printf("test\n");
 		pwd = getcwd(NULL, 0);
 		modif_env(&l,pwd,"OLDPWD");
 		chdir(newargv[i]);
@@ -38,44 +43,48 @@ void cd_dir(char **newargv,t_env *l)
 		pwd = getcwd(NULL, 0);
 		modif_env(&l,pwd,"PWD");
 		ft_strdel(&pwd);
-	//	return ;
+		//	return ;
 	}
 }
 
-int	check_echo(char **argenv, t_env *list)
+int	check_echo(char **argenv, t_env *l)
 {
+	t_env *list;
 	int i;
 	int k;
-	char *str;
 
-	str = argenv[1];
+	list = l;
 	k = 0;
-	i = -1;
-	if (str == NULL)
+	i = 1;
+	if (argenv[1] == NULL)
 		return 0;
-
-	if(!ft_strcmp(str,"-n"))
-	{
+	if(!ft_strcmp(argenv[1],"-n"))
 		i = 2;
-		while(argenv[i])
-		{	ft_putstr(argenv[i]);
-			i++;
-			if(argenv[i])
+	while(argenv[i])
+		if (argenv[i][0] == '$')
+		{
+			list = l;
+			k = 0;
+			while (list)
+				if(!ft_strcmp(argenv[i] + 1,list->var))
+				{
+					while(list->content[++k] != '=');
+					ft_putstr(list->content + ++k);
+					list = NULL;
+				}
+				else
+					list = list->next;
+			if(argenv[++i])
 				ft_putchar(' ');
 		}
-		return 1;
-	}
-	if (str[0] == '$')
-		while (list)
+		else
 		{
-			if(!ft_strcmp(str + 1,list->var))
-			{
-				while(list->content[++k] != '=');
-				ft_putendl(list->content + ++k);
-				return 1;
-			}
-			list = list->next;
+			ft_putstr(argenv[i]);
+			if(argenv[++i])
+				ft_putchar(' ');
 		}
+	if(ft_strcmp(argenv[1],"-n") != 0)
+		ft_putendl("");
 	return 0;
 }
 

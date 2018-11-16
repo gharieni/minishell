@@ -29,6 +29,7 @@ SRC_NAME = main.c \
 		   error.c\
 		   list.c\
 		   cd.c\
+		   ft_trim.c\
 	gnl/get_next_line.c
 
 

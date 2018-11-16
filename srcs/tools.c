@@ -74,7 +74,7 @@ char *del_tab(char *str)
 
 	i = -1;
 
-	while(str[++i])
+	while(str && str[++i])
 		if(str[i] == '\t')
 			str[i] = ' ';
 		return str;

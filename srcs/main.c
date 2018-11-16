@@ -5,20 +5,21 @@ void add_path(char **str,char **bin,char *argv)
 	int i = -1;
 	char *old_bin;
 
-	while(bin[++i])
+	while(bin && bin[++i])
 	{
 		old_bin = *(bin + i);
 		bin[i] = ft_strjoin(bin[i],"/");
 		ft_strdel(&old_bin);
+//	if(*str)
 		ft_strdel(str);
 		*str = ft_strjoin(bin[i],argv);
 		if (access(*str,R_OK) == 0)
 		{
-			ft_freestrarr(bin);
+//			ft_freestrarr(bin);
 			return;
 		}
 	}
-	//	printf("check me ligne 24 in the main \n");
+//		printf("check me ligne 24 in the main \n");
 	ft_strdel(str);
 	*str = ft_strdup(argv);
 }
@@ -54,7 +55,7 @@ static int	 exec_command(char *command,char **newargv,char **env)
 			return (0);
 		}
 		else if (f.st_mode & S_IXUSR)
-			return (run_cmd(ft_strdup(command), newargv,env));
+		return (run_cmd(ft_strdup(command), newargv,env));
 	}
 	ft_putstr("minishell: command not found: ");
 	ft_putendl(command);
@@ -67,7 +68,6 @@ int my_work(char **env,t_env **list,char *str)
 	char *path;
 	char **newargv;
 	int status =  0;
-	//pid_t pid;
 
 	newargv = NULL;
 	if(str)
@@ -80,15 +80,15 @@ int my_work(char **env,t_env **list,char *str)
 		cd_dir(newargv,*list);
 		return(free_without_fork(newargv,str));
 	}
+	else if(ft_strcmp(newargv[0],"echo") == 0)
+	{
+		check_echo(newargv,*list);
+			return(free_without_fork(newargv,str));
+	}
 	else if(ft_strcmp(newargv[0],"env") == 0)
 	{
 		print_list(*list);
 		return(free_without_fork(newargv,str));
-	}
-	else if(ft_strcmp(newargv[0],"echo") == 0)
-	{
-		if (!check_echo(newargv,*list))
-			return(free_without_fork(newargv,str));
 	}
 	else if(ft_strcmp(newargv[0],"setenv") == 0)
 	{
@@ -117,7 +117,7 @@ int my_work(char **env,t_env **list,char *str)
 	bin = ft_strsplit(path,':');
 	str = del_tab(str);
 	add_path(&str,bin,newargv[0]);
-	if(*bin)
+	if(bin && *bin)
 		ft_freestrarr(bin);
 	exec_command(str,newargv,env);
 	//	if (access(str,X_OK) == -1 && *newargv[0] != '.')
@@ -135,22 +135,29 @@ int main(int ac , char **av, char **env)
 {
 	t_env	*list;
 	char	*str;
-	int		ret;
 
 	list = my_params_in_list(env);
 	str = NULL;
-	while (42 || ac || av)
+	while (19 || ac || av)
 	{
+		ft_putstr(GRN);
 		ft_putstr("•••••••  gmelek> ");
+		ft_putstr(RESET);
 		//		signal(SIGINT,signal_handler);
 		get_next_line(0,&str);
-		while(ft_strcmp(str,"exit") == 0)
+		if(str && !ft_strlen(str))
+			ft_strdel(&str);
+		str = del_tab(str);
+		
+		while(str && ft_strcmp(str,"exit") == 0)
 		{
 			ft_strdel(&str);
 			free_list(&list);
 			exit (0);
 		}
-		ret = my_work(NULL,&list,str);
+//	printf(">>>>>>>>>>>>>>>>>>%st\n",str);
+		if(str)
+			my_work(NULL,&list,str);
 	}
 	return (0);
 }

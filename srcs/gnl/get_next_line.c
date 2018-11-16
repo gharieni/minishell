@@ -3,98 +3,86 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmelek <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: ghamelek <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/01/02 14:39:10 by gmelek            #+#    #+#             */
-/*   Updated: 2017/01/17 20:00:38 by gmelek           ###   ########.fr       */
+/*   Created: 2018/10/02 18:17:07 by ghamelek          #+#    #+#             */
+/*   Updated: 2018/11/09 13:04:50 by ghamelek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include<fcntl.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include <stdio.h>
-#include"get_next_line.h"
 
-static int gnl_check_stock(char **stock, char **line)
+#include "get_next_line.h"
+
+static int	gnl_check_stock(char **stock, char **line)
 {
-	char *tmp;
+	char	*tmp;
+	char	*tmp2;
+	char	*s;
 
-	if ((tmp = ft_strchr(*stock, '\n')))
+	if ((tmp = ft_strchr(*stock, 0x0a)))
 	{
 		*tmp = '\0';
-		*line = ft_strdup(*stock);
-		free(*stock);
-		*stock = ft_strdup(tmp + 1);
-		tmp = NULL;
+		s = malloc(ft_strlen(*stock) + 1);
+		*line = ft_strcpy(s, *stock);
+		tmp2 = *stock;
+		s = NULL;
+		s = malloc(ft_strlen(tmp + 1) + 1);
+		*stock = ft_strcpy(s, tmp + 1);
+		ft_strdel(&(tmp2));
+	//	printf("%p    ||    %p \n",s,(tmp + 1));
 		return (1);
 	}
 	return (0);
 }
 
-static int gnl_check_read(char *buffer, char **stock, char **line)
+static int	gnl_check_read(char *buffer, char **stock, char **line)
 {
 	char *tmp;
+	char *s;
 
-	if((tmp = ft_strchr(buffer, '\n')))
+	s = NULL;
+	if ((tmp = ft_strchr(buffer, '\n')))
 	{
 		*tmp = '\0';
 		*line = ft_strjoin(*stock, buffer);
-		free(*stock);
-		*stock = ft_strdup(tmp + 1);
-		tmp = NULL;
-		free(buffer);
+		ft_strdel(stock);
+		s = malloc(ft_strlen(tmp + 1) + 1);
+		*stock = ft_strcpy(s, tmp + 1);
+		ft_strdel(&buffer);
 		return (1);
 	}
 	return (0);
 }
 
-int get_next_line(const int fd, char **line)
+int			get_next_line(const int fd, char **line)
 {
-	char *buffer;
-	static char *stock = NULL;
-	int ret;
+	char		*buf;
+	static char	*stock[5000];
+	int			ret;
+	char		*s;
 
-	buffer = ft_strnew(BUFF_SIZE);
-	if(fd < 0 || !line || read(fd, buffer, 0) < 0)
+	buf = NULL;
+	if (fd > 5000 || fd < 0 || !line || read(fd, buf, 0) < 0)
 		return (-1);
-	if (stock)
-		if (gnl_check_stock(&stock, line))
-			return (1);
-	while ((ret = read(fd, buffer, BUFF_SIZE)) > 0)
+	if (*(stock + fd) && (gnl_check_stock((stock + fd), line)))
+		return (1);
+	if(!(buf = malloc(BUFF_SIZE + 1)))
 	{
-		buffer[ret] = '\0';
-		if (gnl_check_read(buffer, &stock, line))
-			return (1);
-		stock = ft_strjoin(stock, buffer);
-	}
-	free(buffer);
-	buffer = NULL;
-	if (ret == -1)
+		printf("error !!!");
 		return (-1);
-	if (stock == NULL)
+	}	
+	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
+	{
+		if (((buf[ret] = '\0') + 1) && gnl_check_read(buf, (stock + fd), line))
+			return (1);
+			s = *(stock + fd);
+		*(stock + fd) = ft_strjoin(*(stock + fd), buf);
+		ft_strdel(&s);
+	}
+	ft_strdel(&buf);
+	if (*(stock + fd) == NULL)
 		return (0);
-	*line = ft_strdup(stock);
-	free(stock);
-	stock = NULL;
+	*line = ft_strdup(*(stock + fd));
+	ft_strdel((stock + fd));
+//	*(stock + fd) = NULL;
 	return ((ft_strlen(*line) > 0));
 }
-
-/*
-int     main(int argc, char **argv)
-{
-	int		fd;
-	int		ret;
-	char	*line;
-
-	line = NULL;
-	if (argc == 2)
-	{
-		fd = open(argv[1], O_RDONLY);
-	 ret = get_next_line(fd, &line);
-		ft_putstr(line);
-	ft_putnbr(ret);
-		
-		close(fd);
-	}
-	return(0);
-}*/
