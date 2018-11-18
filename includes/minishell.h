@@ -30,8 +30,7 @@ typedef struct		s_env
 }					t_env;
 
 
-char	*trim_trailing_whitespaces(char *str);
-int		free_without_fork(char **newargv, char *str);
+int my_command(char *str,char **newargv,t_env **list);
 void	free_list(t_env **l);
 void    handler(int sign);
 void    signal_handler(int sign);

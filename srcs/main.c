@@ -10,16 +10,11 @@ void add_path(char **str,char **bin,char *argv)
 		old_bin = *(bin + i);
 		bin[i] = ft_strjoin(bin[i],"/");
 		ft_strdel(&old_bin);
-//	if(*str)
 		ft_strdel(str);
 		*str = ft_strjoin(bin[i],argv);
 		if (access(*str,R_OK) == 0)
-		{
-//			ft_freestrarr(bin);
 			return;
-		}
 	}
-//		printf("check me ligne 24 in the main \n");
 	ft_strdel(str);
 	*str = ft_strdup(argv);
 }
@@ -51,9 +46,7 @@ static int	 exec_command(char *command,char **newargv,char **env)
 	if (lstat(command, &f) != -1)
 	{
 		if (f.st_mode & S_IFDIR)
-		{
 			return (0);
-		}
 		else if (f.st_mode & S_IXUSR)
 		return (run_cmd(ft_strdup(command), newargv,env));
 	}
@@ -69,50 +62,10 @@ int my_work(char **env,t_env **list,char *str)
 	char **newargv;
 	int status =  0;
 
-	newargv = NULL;
-	if(str)
-		newargv = strsplit(str);
-
-	if(!newargv[0])
-		return (0);
-	if(ft_strcmp(newargv[0],"cd") == 0)
-	{
-		cd_dir(newargv,*list);
-		return(free_without_fork(newargv,str));
-	}
-	else if(ft_strcmp(newargv[0],"echo") == 0)
-	{
-		check_echo(newargv,*list);
-			return(free_without_fork(newargv,str));
-	}
-	else if(ft_strcmp(newargv[0],"env") == 0)
-	{
-		print_list(*list);
-		return(free_without_fork(newargv,str));
-	}
-	else if(ft_strcmp(newargv[0],"setenv") == 0)
-	{
-		if(!newargv[1])
-			print_list(*list);
-		if(newargv[3])
-			ft_putendl_fd("setenv: Too many arguments.", 2);
-		else
-			*list = my_setenv(newargv[1],newargv[2],*list);
-		return(free_without_fork(newargv,str));
-	}
-	else if(ft_strcmp(newargv[0],"unsetenv") == 0)
-	{
-		*list = my_unsetenv(newargv[1],newargv[2],list);
-		return(free_without_fork(newargv,str));
-	}
-	else if(*newargv[0] == '.' && newargv[0][1] == '/' && access(str,R_OK))
-		ft_putstr("file >>>>>>>>>>>>>>> \n");
-	//	ft_fileserr(path);
-	else if(*newargv[0] == '.' && !newargv[0][1])
-		ft_putstr(".: not enough arguments\n");
-	if (ft_noaccess(str) == 1)
-		return(free_without_fork(newargv,str));
-	env = my_exceve(str,*list);
+	newargv = strsplit(str);
+	if (!my_command(str,newargv,list))
+		return 0;
+	env= my_exceve(str,*list);
 	path = my_env(env);
 	bin = ft_strsplit(path,':');
 	str = del_tab(str);
@@ -148,14 +101,12 @@ int main(int ac , char **av, char **env)
 		if(str && !ft_strlen(str))
 			ft_strdel(&str);
 		str = del_tab(str);
-		
 		while(str && ft_strcmp(str,"exit") == 0)
 		{
 			ft_strdel(&str);
 			free_list(&list);
 			exit (0);
 		}
-//	printf(">>>>>>>>>>>>>>>>>>%st\n",str);
 		if(str)
 			my_work(NULL,&list,str);
 	}
