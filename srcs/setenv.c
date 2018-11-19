@@ -11,17 +11,6 @@ int	ft_strisalnum(char *s)
 	return (1);
 }
 
-char *my_env(char **env)
-{
-	int i;
-
-	i = -1;
-	while (env[++i])
-		if(ft_strncmp(env[i],"PATH=",5) == 0)
-			return ((char*)env[i] + 5);
-	return (NULL);
-}
-
 t_env		*my_unsetenv(char *var,char *val,t_env **l)
 {
 	char *str;
@@ -52,6 +41,7 @@ int setenv_err(char *var)
 	}
 return 0;
 }
+
 t_env		*my_setenv(char *var,char *val,t_env *l)
 {
 	char *str;

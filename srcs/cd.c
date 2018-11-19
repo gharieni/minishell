@@ -1,21 +1,36 @@
 #include"minishell.h"
 
+static void cd_dir_suite(char **newargv,t_env *l)
+{
+	char *pwd;
+	int i;
+
+	i = 0;
+	while(newargv[++i] && (newargv[i][0] != '-'))
+	{
+		if (ft_cd_checkerrors(newargv[i]))
+			return ;
+		pwd = getcwd(NULL, 0);
+		modif_env(&l,pwd,"OLDPWD");
+		chdir(newargv[i]);
+		ft_strdel(&pwd);
+		pwd = getcwd(NULL, 0);
+		modif_env(&l,pwd,"PWD");
+		ft_strdel(&pwd);
+	}
+
+}
+
 void cd_dir(char **newargv,t_env *l)
 {
-	int i = 0;
-	char *pwd;
 	t_env *list;
 	int k;
 
 	k = -1;
 	list = l;
-	if(!newargv[1])
-	{
+	if(!newargv[1] && ((newargv[2] = NULL) || 1))
 		newargv[1] = ft_strdup("/Users/user");
-		newargv[2] = NULL;
-	}
 	if(!ft_strcmp(newargv[1], "-"))
-	{
 		while (list)
 		{
 			if(!ft_strcmp("OLDPWD",list->var))
@@ -30,41 +45,18 @@ void cd_dir(char **newargv,t_env *l)
 			}
 			list = list->next;
 		}
-	}
-	while(newargv[++i] && (newargv[i][0] != '-'))
-	{
-		if (ft_cd_checkerrors(newargv[i]))
-			return ;
-		//	printf("test\n");
-		pwd = getcwd(NULL, 0);
-		modif_env(&l,pwd,"OLDPWD");
-		chdir(newargv[i]);
-		ft_strdel(&pwd);
-		pwd = getcwd(NULL, 0);
-		modif_env(&l,pwd,"PWD");
-		ft_strdel(&pwd);
-		//	return ;
-	}
+	cd_dir_suite(newargv,list);
 }
 
-int	check_echo(char **argenv, t_env *l)
+static void	check_echo_suite(char **argenv, t_env *l,int i)
 {
 	t_env *list;
-	int i;
 	int k;
 
 	list = l;
-	k = 0;
-	i = 1;
-	if (argenv[1] == NULL)
-		return 0;
-	if(!ft_strcmp(argenv[1],"-n"))
-		i = 2;
 	while(argenv[i])
-		if (argenv[i][0] == '$')
+		if ((argenv[i][0] == '$') && ((list = l) || 1) && ((k = 0) || 1))
 		{
-			list = l;
-			k = 0;
 			while (list)
 				if(!ft_strcmp(argenv[i] + 1,list->var))
 				{
@@ -83,43 +75,31 @@ int	check_echo(char **argenv, t_env *l)
 			if(argenv[++i])
 				ft_putchar(' ');
 		}
+}
+
+int	check_echo(char **argenv, t_env *l)
+{
+	int i;
+
+	i = 1;
+	if (argenv[1] == NULL)
+		return 0;
+	if(!ft_strcmp(argenv[1],"-n"))
+		i = 2;
+	check_echo_suite(argenv, l,i);
 	if(ft_strcmp(argenv[1],"-n") != 0)
 		ft_putendl("");
 	return 0;
 }
 
-void    ft_cd_puterr(char *path, char *message)
+char *del_tab(char *str)
 {
-	ft_putstr_fd("cd: ", 2);
-	ft_putstr_fd(path, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putendl_fd(message, 2);
-}
+	int i;
 
-int  ft_cd_checkerrors(char *path)
-{
-	struct stat		*st;
+	i = -1;
 
-	if (!(st = (struct stat *)malloc(sizeof(*st))))
-		return (1);
-	if (stat(path, st) == -1)
-	{
-		ft_cd_puterr(path, "No such file or directory");
-		free(st);
-		return (1);
-	}
-	else if (S_ISDIR(st->st_mode) != 1)
-	{
-		ft_cd_puterr(path, "Not a directory");
-		free(st);
-		return (1);
-	}
-	else if (access(path, X_OK) == -1)
-	{
-		ft_cd_puterr(path, "Permission denied");
-		free(st);
-		return (1);
-	}
-	free(st);
-	return (0);
+	while(str && str[++i])
+		if(str[i] == '\t')
+			str[i] = ' ';
+		return str;
 }

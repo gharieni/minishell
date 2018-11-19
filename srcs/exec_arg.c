@@ -1,4 +1,32 @@
 #include "minishell.h"
+char *my_env(char **env)
+{
+	int i;
+
+	i = -1;
+	while (env[++i])
+		if(ft_strncmp(env[i],"PATH=",5) == 0)
+			return ((char*)env[i] + 5);
+	return (NULL);
+}
+
+char **my_exceve(char *str, t_env *list)
+{
+	char **env;
+	int i = 0;
+
+	env = NULL;
+	if(str || 1)
+		env = malloc((list_count(list) + 1) * sizeof (char*));
+	while(list)
+	{
+	env[i] = ft_strdup(list->content);
+	i++;
+	list = list->next;
+	}
+	env[i] = NULL;
+return env;
+}
 
 static int free_without_fork(char **newargv, char *str)
 {
@@ -6,12 +34,14 @@ static int free_without_fork(char **newargv, char *str)
 	ft_strdel(&str);
 	return (0);
 }
+
 void execution(char *str,char **env, char **newargv,t_env **list)
 {
 		//signal(SIGINT,handler);
 	if(list || 1)
 		execve(str, newargv, env);
 }
+
 int my_command(char *str, char **newargv, t_env **list)
 {
 	int t;

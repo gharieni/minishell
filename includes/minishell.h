@@ -30,7 +30,9 @@ typedef struct		s_env
 }					t_env;
 
 
-int my_command(char *str,char **newargv,t_env **list);
+t_env	*ft_create_elem(void *data);
+void	my_list_add(void* data, t_env	**begin_list);
+int		my_command(char *str,char **newargv,t_env **list);
 void	free_list(t_env **l);
 void    handler(int sign);
 void    signal_handler(int sign);

@@ -11,24 +11,6 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-char **my_exceve(char *str, t_env *list)
-{
-	char **env;
-	int i = 0;
-
-	env = NULL;
-	if(str || 1)
-		env = malloc((list_count(list) + 1) * sizeof (char*));
-	while(list)
-	{
-	env[i] = ft_strdup(list->content);
-	i++;
-	list = list->next;
-	}
-	env[i] = NULL;
-return env;
-}
-
 static const char		*ft_str_find_next(const char *str, int skip)
 {
 	if (skip)
@@ -66,18 +48,6 @@ static char				**ft_tabledel(char **ret, int len)
 		free(ret[i]);
 	free(ret);
 	return (NULL);
-}
-
-char *del_tab(char *str)
-{
-	int i;
-
-	i = -1;
-
-	while(str && str[++i])
-		if(str[i] == '\t')
-			str[i] = ' ';
-		return str;
 }
 
 char					**strsplit(char const *str)
