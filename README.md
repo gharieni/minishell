@@ -27,4 +27,5 @@ You can even call minishell from minishell!
 
 ##
 More information can be found on the [PDF].
+
 [PDF]: https://github.com/gharieni/minishell/minishell.en.pdf
